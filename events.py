@@ -1,3 +1,4 @@
+
 def register_socket_events(socket):
 
     @socket.on("connect")
@@ -9,5 +10,7 @@ def register_socket_events(socket):
         print(message)
 
     @socket.on("Alarm")
-    def handle_Alarm(message):
-        print(message)
+    def handle_Alarm(melder):
+        print(melder)
+        socket.emit("AlarmKarte", melder)
+
