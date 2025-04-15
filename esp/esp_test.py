@@ -14,7 +14,13 @@ def handle_quitteren(melderNrInput):
 def handle_connect():
     socket.emit("melder_join", melderNr)
 
+@socket.on("alarm_aus")
+def handle_alarm_aus():
+    print("Alarm aus!")
+
 socket.connect("http://localhost:5000/")
+time.sleep(5)
+socket.emit("alarm", melderNr)
 time.sleep(5)
 socket.emit("alarm", melderNr)
 time.sleep(5)

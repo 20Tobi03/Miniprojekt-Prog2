@@ -9,8 +9,7 @@
     alarm=false;
     socket.on("alarm", function(melderNr) {
         document.getElementById(melderNr).style.backgroundColor = "red";
-        var timestamp= new Date();
-        document.getElementById(melderNr).innerHTML=melderNr+" Alarm um: "+timestamp;
+        document.getElementById(melderNr).innerHTML=melderNr+" Alarm um: "+datum();
         alarm=true;
     })
 
@@ -19,20 +18,17 @@
         document.getElementById(melderNr).style.backgroundColor = "orange";
         alarm=false;
       }
-      var timestamp= new Date();
-      document.getElementById(melderNr).innerHTML=melderNr+" Kein Alarm seit: "+timestamp;
+      document.getElementById(melderNr).innerHTML=melderNr+" Kein Alarm seit: "+datum();
     })  
 
     socket.on("melder_join", function(melderNr) {
       document.getElementById(melderNr).style.backgroundColor = "green";
-      var timestamp= new Date();
-      document.getElementById(melderNr).innerHTML=melderNr+" Online seit: "+timestamp;
+      document.getElementById(melderNr).innerHTML=melderNr+" Online seit: "+datum();
     })
 
     socket.on("melder_leave", function(melderNr) {
       document.getElementById(melderNr).style.backgroundColor = "orange";
-      var timestamp= new Date();
-      document.getElementById(melderNr).innerHTML=melderNr+" Offline seit: "+timestamp;
+      document.getElementById(melderNr).innerHTML=melderNr+" Offline seit: "+datum();
     })
 
     function quittieren(melderNr) {
@@ -40,6 +36,31 @@
         document.getElementById(melderNr).style.backgroundColor = "green";
         alarm=false;
     }
+
+    function test_quittieren() {
+      var melder = document.getElementsByClassName("melder");
+      Array.from(melder).forEach(element => {
+        socket.emit("quittieren", element.id);
+        element.style.backgroundColor = "green";
+      });
+    }
+
+    function alarm_aus() {
+        socket.emit("alarm_aus");
+    }
+    
+    function datum() {
+      var timestamp = new Date().toLocaleString("de-DE", {
+      year: "numeric",
+      month: "long",         // z.B. April
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+      });
+      return timestamp;
+    }
+
   </script>
   <style>
     body {
@@ -47,18 +68,24 @@
       text-align: center;
       margin-top: 100px;
     }
-    .melder {
+
+    button {
       padding: 15px 30px;
       font-size: 16px;
       margin: 10px;
       cursor: pointer;
+    }
+
+    .melder {
       background-color: orange;
     }
   </style>
 </head>
 <body>
   <h1>Willkommen!</h1>
-  <button class="melder" id="1/1" onclick="quittieren(this.id)">Melder 1/1</button>
-  <button class="melder" id="1/2" onclick="quittieren(this.id)">Melder 1/2</button>
+  <button class="melder" id="1/1" onclick="quittieren(this.id)">Melder 1/1 Offline</button>
+  <button class="melder" id="1/2" onclick="quittieren(this.id)">Melder 1/2 Offline</button>
+  <button class="BMA_Steuerung" id="test_quittieren" onclick="test_quittieren()">Test Quittieren</button>
+  <button class="BMA_Steuerung" id="alarm_aus" onclick="alarm_aus()">Alarm aus</button>
 </body>
 </html>
