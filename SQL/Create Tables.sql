@@ -28,5 +28,4 @@ INSERT INTO alarme (ID, Art, Timestemp, MelderNr) VALUES
 (1, 'Test', '0000-00-00', '1/1'),
 (2, 'Test', '2025-04-15', '1/1'); */
 
-/* UPDATE melder SET PlanPath = "./Plaene/Melder1_1.jpg" WHERE MelderNr = '1/1';
- */
+/* UPDATE melder SET PlanPath = "./Plaene/Melder1_2.jpg" WHERE MelderNr = '1/2'; */
