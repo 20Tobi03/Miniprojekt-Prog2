@@ -7,10 +7,11 @@
   <script>
     socket=io();
     alarm=false;
-    socket.on("alarm", function(melderNr) {
-        document.getElementById(melderNr).style.backgroundColor = "red";
-        document.getElementById(melderNr).innerHTML=melderNr+" Alarm um: "+datum();
+    socket.on("alarm", function(data) {
+        document.getElementById(data.melderNr).style.backgroundColor = "red";
+        document.getElementById(data.melderNr).innerHTML=data.melderNr+" Alarm um: "+datum();
         alarm=true;
+        updateImage(data.melderPath);
     })
 
     socket.on("noAlarm", function(melderNr) {
@@ -61,6 +62,11 @@
       return timestamp;
     }
 
+    function updateImage(melderPath){
+      var imageElement = document.getElementById("melderPlan");
+      imageElement.src = melderPath;
+    }
+
   </script>
   <style>
     body {
@@ -82,10 +88,11 @@
   </style>
 </head>
 <body>
-  <h1>Willkommen!</h1>
+  <h1>BMA</h1>
   <button class="melder" id="1/1" onclick="quittieren(this.id)">Melder 1/1 Offline</button>
   <button class="melder" id="1/2" onclick="quittieren(this.id)">Melder 1/2 Offline</button>
   <button class="BMA_Steuerung" id="test_quittieren" onclick="test_quittieren()">Test Quittieren</button>
   <button class="BMA_Steuerung" id="alarm_aus" onclick="alarm_aus()">Alarm aus</button>
+  <img id="melderPlan" src="" alt="Lageplan für Melder">
 </body>
 </html>
