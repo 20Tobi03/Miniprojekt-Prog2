@@ -1,4 +1,5 @@
 
+import sqlite3
 from flask import request
 
 def register_socket_events(socket):
@@ -42,5 +43,12 @@ def register_socket_events(socket):
     @socket.on("alarm")
     def handle_alarm(melderNr):
         print("Alarm: "+ melderNr)
-        socket.emit("alarm", melderNr, to=None)
+        conn = sqlite3.connect('./SQL/melderdb.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT PlanPath FROM melder WHERE MelderNr = ?", (melderNr,))
+        result = cursor.fetchone()
+        plan_path = result[0]
+        #socket.emit("alarm", melderNr, to=None)
+        socket.emit("alarm", {'melderNr': melderNr, 'melderPath': plan_path}, to=None)
+
 
