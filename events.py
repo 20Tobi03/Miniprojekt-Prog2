@@ -1,6 +1,8 @@
 
 import sqlite3
 from flask import request
+import datetime
+
 
 def register_socket_events(socket):
 
@@ -23,6 +25,17 @@ def register_socket_events(socket):
             melderNr = connected_melder.pop(sid)
             print("Melder disconnected: " + melderNr)
             socket.emit("melder_leave", melderNr, to=None)
+
+            #DB Eintrag
+            conn = sqlite3.connect('./SQL/melderdb.db')
+            cursor = conn.cursor()
+            timestamp = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+            cursor.execute(
+            "INSERT INTO alarme (Art, Timestemp, MelderNr) VALUES (?, ?, ?)",
+            ("Offline", timestamp, melderNr)
+            )
+            conn.commit()
+            conn.close()
         else:
             print("Browser disconnected (sid: " + sid + ")")
 
@@ -48,7 +61,16 @@ def register_socket_events(socket):
         cursor.execute("SELECT PlanPath FROM melder WHERE MelderNr = ?", (melderNr,))
         result = cursor.fetchone()
         plan_path = result[0]
+
+        #Alarm in DB eintragen
+        timestamp = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+        cursor.execute(
+        "INSERT INTO alarme (Art, Timestemp, MelderNr) VALUES (?, ?, ?)",
+        ("Brand", timestamp, melderNr)
+        )
+        conn.commit()
+
         #socket.emit("alarm", melderNr, to=None)
         socket.emit("alarm", {'melderNr': melderNr, 'melderPath': plan_path}, to=None)
-
+        conn.close()
 

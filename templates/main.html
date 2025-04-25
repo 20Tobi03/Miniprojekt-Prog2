@@ -12,6 +12,7 @@
         document.getElementById(data.melderNr).innerHTML=data.melderNr+" Alarm um: "+datum();
         alarm=true;
         updateImage(data.melderPath);
+        ladeAlarme();
     })
 
     socket.on("noAlarm", function(melderNr) {
@@ -30,6 +31,7 @@
     socket.on("melder_leave", function(melderNr) {
       document.getElementById(melderNr).style.backgroundColor = "orange";
       document.getElementById(melderNr).innerHTML=melderNr+" Offline seit: "+datum();
+      ladeAlarme();
     })
 
     function quittieren(melderNr) {
@@ -46,6 +48,7 @@
         element.style.backgroundColor = "green";
       });
       updateImage("verstecken");
+      alarm=false;
     }
 
     function alarm_aus() {
@@ -75,6 +78,29 @@
       }
       
     }
+  
+    function ladeAlarme() {
+      fetch("/api/alarme")
+        .then(response => response.json())
+        .then(data => {
+          const tbody = document.querySelector("#alarmTabelle tbody");
+          tbody.innerHTML = "";
+          data.forEach(alarm => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${alarm.Timestemp}</td>
+              <td>${alarm.Art}</td>
+              <td>${alarm.MelderNr}</td>
+              <td>${alarm.Raum || "?"}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        });
+    }
+
+    window.onload = function() {
+      ladeAlarme();
+    };
 
   </script>
   <style>
@@ -144,5 +170,17 @@
       <img id="melderPlan" src="" style="display: none;">
     </div>
   </div>
+  <h2 style="text-align: left; margin-left: 20px;">Letzte Alarme</h2>
+  <table id="alarmTabelle" border="1" style="border-collapse: collapse; margin-left: 20px;">
+    <thead>
+      <tr>
+        <th>Zeit</th>
+        <th>Art</th>
+        <th>Melder-Nr</th>
+        <th>Raum</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </body>
 </html>
