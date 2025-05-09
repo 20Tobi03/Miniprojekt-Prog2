@@ -29,7 +29,7 @@ def register_socket_events(socket):
             #DB Eintrag
             conn = sqlite3.connect('./SQL/melderdb.db')
             cursor = conn.cursor()
-            timestamp = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+            timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute(
             "INSERT INTO alarme (Art, Timestemp, MelderNr) VALUES (?, ?, ?)",
             ("Offline", timestamp, melderNr)
@@ -63,7 +63,7 @@ def register_socket_events(socket):
         plan_path = result[0]
 
         #Alarm in DB eintragen
-        timestamp = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         cursor.execute(
         "INSERT INTO alarme (Art, Timestemp, MelderNr) VALUES (?, ?, ?)",
         ("Brand", timestamp, melderNr)

@@ -24,8 +24,8 @@ INSERT INTO melder (MelderNr, Gruppe, Nr_in_Gruppe, Raum, PlanPath) VALUES
 ('1/1', 1, 1, 'Büro', ''),
 ('1/2', 1, 2, 'Pausenraum', '');
 
-INSERT INTO alarme (ID, Art, Timestemp, MelderNr) VALUES
-(1, 'Test', '0000-00-00', '1/1'),
-(2, 'Test', '2025-04-15', '1/1'); */
+INSERT INTO alarme (Art, Timestemp, MelderNr) VALUES
+('Test5', '0010-00-00', '1/1'); */
 
 /* UPDATE melder SET PlanPath = "./Plaene/Melder1_2.jpg" WHERE MelderNr = '1/2'; */
+/* DELETE FROM alarme; */

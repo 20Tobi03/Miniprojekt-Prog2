@@ -10,7 +10,7 @@ app = Flask(__name__)
 socket = SocketIO(app)
 
 def get_latest_alarme(limit=10):
-    conn = sqlite3.connect("./SQL/melderdb.db")  # ggf. Pfad anpassen
+    conn = sqlite3.connect("./SQL/melderdb.db")  
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("""

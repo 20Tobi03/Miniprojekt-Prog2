@@ -86,9 +86,13 @@
           const tbody = document.querySelector("#alarmTabelle tbody");
           tbody.innerHTML = "";
           data.forEach(alarm => {
+            console.log(alarm)
             const row = document.createElement("tr");
+            const [datum, uhrzeit] = alarm.Timestemp.split(" ");
+            const [jahr, monat, tag] = datum.split("-");
+            asugabeDatum=`${tag}.${monat}.${jahr} ${uhrzeit}`;
             row.innerHTML = `
-              <td>${alarm.Timestemp}</td>
+              <td>${asugabeDatum}</td>
               <td>${alarm.Art}</td>
               <td>${alarm.MelderNr}</td>
               <td>${alarm.Raum || "?"}</td>
