@@ -1,5 +1,4 @@
 from flask import Flask, render_template, send_from_directory, jsonify
-from flask import Flask, render_template
 from flask_socketio import SocketIO
 import os
 import sqlite3

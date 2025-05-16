@@ -3,7 +3,7 @@ import threading
 import time
 
 socket=socketio.Client()
-melderNr="1/2"
+melderNr="1/1"
 
 @socket.on("quittieren")
 def handle_quitteren(melderNrInput):
@@ -24,5 +24,5 @@ socket.emit("alarm", melderNr)
 time.sleep(5)
 socket.emit("alarm", melderNr)
 time.sleep(5)
-socket.emit("noAlarm", melderNr)
+#socket.emit("noAlarm", melderNr)
 socket.wait()
