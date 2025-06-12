@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, jsonify
+from flask import Flask, render_template, send_from_directory, jsonify, request
 from flask_socketio import SocketIO
 import os
 import sqlite3
@@ -32,6 +32,15 @@ def api_alarme():
 def serve_image(filename):
     # Gebe die Datei aus dem Plaene-Ordner zurück
     return send_from_directory(os.path.join(app.root_path, 'Plaene'), filename)
+
+@app.route("/api/alarm", methods=["POST"])
+def api_alarm():
+    data = request.get_json()  # Empfange JSON-Daten
+    melderNr = data.get('melderNr')
+    if melderNr:
+        socket.emit("alarm", {"melderNr": melderNr})
+        return jsonify({"message": "Alarm erhalten", "melderNr": melderNr}), 200
+    return jsonify({"message": "Keine MelderNr erhalten"}), 400
 
 @app.route("/")
 def main():

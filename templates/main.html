@@ -11,8 +11,14 @@
         document.getElementById(data.melderNr).style.backgroundColor = "red";
         document.getElementById(data.melderNr).innerHTML=data.melderNr+" Alarm um: "+datum();
         alarm=true;
-        updateImage(data.melderPath);
         ladeAlarme();
+        console.log(data.melderPath);
+        if (data.melderPath===undefined) {
+          socket.emit("alarm", data.melderNr);
+        }
+        else{
+          updateImage(data.melderPath);
+        }
     })
 
     socket.on("noAlarm", function(melderNr) {
@@ -68,13 +74,21 @@
     }
 
     function updateImage(melderPath){
-      var imageElement = document.getElementById("melderPlan");
+      var container = document.getElementById("melderPlanContainer");
+
       if(melderPath==="verstecken"){
         imageElement.style.display="none";
       }
       else{
-        imageElement.src = melderPath;
-        imageElement.style.display="inline-block";  //Typ anpassen
+        container.style.display = "flex";
+        var newImage = document.createElement("img");
+        newImage.src = melderPath;
+        newImage.style.maxWidth = "30%"; // Optional: kann angepasst werden
+        newImage.style.height = "auto";
+        newImage.style.marginRight = "20px"; // Abstand zwischen den Bildern
+        
+        // Füge das neue Bild zum Container hinzu
+        container.appendChild(newImage);
       }
       
     }
@@ -166,11 +180,11 @@
     <div class="button-column">
       <button class="melder" id="1/1" onclick="quittieren(this.id)">Melder 1/1 Offline</button>
       <button class="melder" id="1/2" onclick="quittieren(this.id)">Melder 1/2 Offline</button>
-      <button class="BMA_Steuerung" onclick="test_quittieren()">Test Quittieren</button>
-      <button class="BMA_Steuerung" onclick="alarm_aus()">Alarm aus</button>
+      <button class="BMA_Steuerung" onclick="test_quittieren()">Anlage zurückstellen</button>
+      <button class="BMA_Steuerung" onclick="alarm_aus()">Alarmton aus</button>
     </div>
   
-    <div class="bild-anzeige">
+    <div class="bild-anzeige" id="melderPlanContainer">
       <img id="melderPlan" src="" style="display: none;">
     </div>
   </div>
