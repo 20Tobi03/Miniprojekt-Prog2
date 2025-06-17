@@ -6,7 +6,7 @@ import socketio
 sio = socketio.Client()
 
 # Speichert verbundene ESPs mit zugehöriger melderNr
-esp_websockets = {}  # websocket -> melderNr
+esp_websockets = {}
 
 # Wir speichern den Event Loop
 event_loop = asyncio.get_event_loop()
@@ -23,8 +23,8 @@ def disconnect():
 @sio.on("quittieren")
 def on_quittieren(melderNr):
     print(f"➡️ Flask sendet quittieren für: {melderNr}")
-    for ws, nr in esp_websockets.items():
-        if nr == melderNr:
+    for ws, melderListe in esp_websockets.items():
+        if melderNr in melderListe:
             asyncio.run_coroutine_threadsafe(
                 ws.send(f"quittieren:{melderNr}"),
                 event_loop
@@ -33,17 +33,21 @@ def on_quittieren(melderNr):
 # Mit Flask verbinden
 sio.connect("http://localhost:5000")
 
+
+
 # WebSocket-Handler für ESPs
-async def handler(websocket, path):
+async def handler(websocket):
     print("🔌 ESP verbunden")
     melderNr = None
     try:
         async for message in websocket:
             print(f"⬅️ ESP sendet: {message}")
             if message.startswith("register:"):
-                melderNr = message.split(":")[1]
-                esp_websockets[websocket] = melderNr
-                print(f"🆔 Registriert als Melder {melderNr}")
+                melder_string = message.split(":")[1]
+                melderListe = melder_string.split(",")
+                esp_websockets[websocket] = melderListe
+                print(f"🆔 Registriert mit Meldern: {melderListe}")
+
             elif message.startswith("alarm:"):
                 melderNr = message.split(":")[1]
                 print(f"🚨 Alarm von Melder {melderNr}")

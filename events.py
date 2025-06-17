@@ -56,6 +56,8 @@ def register_socket_events(socket):
     @socket.on("alarm")
     def handle_alarm(melderNr):
         print("Alarm: "+ melderNr)
+
+        #Melder Plan abfragen
         conn = sqlite3.connect('./SQL/melderdb.db')
         cursor = conn.cursor()
         cursor.execute("SELECT PlanPath FROM melder WHERE MelderNr = ?", (melderNr,))
@@ -70,7 +72,6 @@ def register_socket_events(socket):
         )
         conn.commit()
 
-        #socket.emit("alarm", melderNr, to=None)
         socket.emit("alarm", {'melderNr': melderNr, 'melderPath': plan_path}, to=None)
         conn.close()
 

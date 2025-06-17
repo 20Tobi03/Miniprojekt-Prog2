@@ -56,7 +56,7 @@ async def main():
     sound_active = False
     df = Player()
     await asyncio.sleep(1)
-    df.volume(10)
+    df.volume(1)
 
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
