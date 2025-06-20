@@ -19,15 +19,7 @@
         else{
           updateImage(data.melderPath);
         }
-    })
-
-    socket.on("noAlarm", function(melderNr) {
-      if(alarm) {
-        document.getElementById(melderNr).style.backgroundColor = "orange";
-        alarm=false;
-      }
-      document.getElementById(melderNr).innerHTML=melderNr+" Kein Alarm seit: "+datum();
-    })  
+    }) 
 
     socket.on("melder_join", function(melderNr) {
       document.getElementById(melderNr).style.backgroundColor = "green";
@@ -47,7 +39,7 @@
         alarm=false;
     }
 
-    function test_quittieren() {
+    function zurueckstellen() {
       var melder = document.getElementsByClassName("melder");
       Array.from(melder).forEach(element => {
         socket.emit("quittieren", element.id);
@@ -83,11 +75,10 @@
         container.style.display = "flex";
         var newImage = document.createElement("img");
         newImage.src = melderPath;
-        newImage.style.maxWidth = "30%"; // Optional: kann angepasst werden
+        newImage.style.maxWidth = "30%"; 
         newImage.style.height = "auto";
-        newImage.style.marginRight = "20px"; // Abstand zwischen den Bildern
+        newImage.style.marginRight = "20px"; 
         
-        // Füge das neue Bild zum Container hinzu
         container.appendChild(newImage);
       }
       
@@ -180,7 +171,7 @@
     <div class="button-column">
       <button class="melder" id="1/1" onclick="quittieren(this.id)">Melder 1/1 Offline</button>
       <button class="melder" id="1/2" onclick="quittieren(this.id)">Melder 1/2 Offline</button>
-      <button class="BMA_Steuerung" onclick="test_quittieren()">Anlage zurückstellen</button>
+      <button class="BMA_Steuerung" onclick="zurueckstellen()">Anlage zurückstellen</button>
       <button class="BMA_Steuerung" onclick="alarm_aus()">Alarmton aus</button>
     </div>
   

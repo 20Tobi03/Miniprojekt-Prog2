@@ -10,7 +10,7 @@ def register_socket_events(socket):
     def handle_connect(melderNr):
         print("Someone joined!")
 
-
+    #Von ESP zu Webseite
     @socket.on("melder_join")
     def handle_connect(melderNr):
         print("Connected: "+ melderNr)
@@ -31,20 +31,6 @@ def register_socket_events(socket):
         conn.commit()
         conn.close()
 
-    @socket.on("quittieren")
-    def handle_quittieren(melderNr):
-        print("Quittiert: "+ melderNr)
-        socket.emit("quittieren", melderNr, to=None)
-
-    @socket.on("alarm_aus")
-    def handle_alarm_aus():
-        print("Alarm aus!")
-        socket.emit("alarm_aus", to=None)
-
-    @socket.on("noAlarm")
-    def handle_noAlarms(melderNr):
-        socket.emit("noAlarm", melderNr, to=None)
-
     @socket.on("alarm")
     def handle_alarm(melderNr):
         print("Alarm: "+ melderNr)
@@ -64,6 +50,19 @@ def register_socket_events(socket):
         )
         conn.commit()
 
-        socket.emit("alarm", {'melderNr': melderNr, 'melderPath': plan_path}, to=None)
+        socket.emit("alarm", {'melderNr': melderNr, 'melderPath': plan_path}, to=None) #Alarm und Pfad an Webseite
         conn.close()
+
+    #Von Webseite zu ESP
+    @socket.on("quittieren")
+    def handle_quittieren(melderNr):
+        print("Quittiert: "+ melderNr)
+        socket.emit("quittieren", melderNr, to=None)
+
+    @socket.on("alarm_aus")
+    def handle_alarm_aus():
+        print("Alarm aus!")
+        socket.emit("alarm_aus", to=None)
+
+    
 
