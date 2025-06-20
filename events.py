@@ -6,38 +6,30 @@ import datetime
 
 def register_socket_events(socket):
 
-    connected_melder = {}  # key: sid, value: melderNr
-
     @socket.on("connect")
     def handle_connect(melderNr):
         print("Someone joined!")
 
+
     @socket.on("melder_join")
     def handle_connect(melderNr):
         print("Connected: "+ melderNr)
-        connected_melder[request.sid] = melderNr
         socket.emit("melder_join", melderNr, to=None)
 
-    @socket.on("disconnect")
-    def handle_disconnect():
-        sid = request.sid
-        if sid in connected_melder:
-            melderNr = connected_melder.pop(sid)
-            print("Melder disconnected: " + melderNr)
-            socket.emit("melder_leave", melderNr, to=None)
+    @socket.on("esp_disconnect")
+    def handle_esp_disconnect(melderNr):
+        socket.emit("esp_disconnect", melderNr, to=None)
 
-            #DB Eintrag
-            conn = sqlite3.connect('./SQL/melderdb.db')
-            cursor = conn.cursor()
-            timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            cursor.execute(
-            "INSERT INTO alarme (Art, Timestemp, MelderNr) VALUES (?, ?, ?)",
-            ("Offline", timestamp, melderNr)
-            )
-            conn.commit()
-            conn.close()
-        else:
-            print("Browser disconnected (sid: " + sid + ")")
+        #DB Eintrag
+        conn = sqlite3.connect('./SQL/melderdb.db')
+        cursor = conn.cursor()
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute(
+        "INSERT INTO alarme (Art, Timestemp, MelderNr) VALUES (?, ?, ?)",
+        ("Offline", timestamp, melderNr)
+        )
+        conn.commit()
+        conn.close()
 
     @socket.on("quittieren")
     def handle_quittieren(melderNr):

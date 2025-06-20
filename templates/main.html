@@ -34,7 +34,7 @@
       document.getElementById(melderNr).innerHTML=melderNr+" Online seit: "+datum();
     })
 
-    socket.on("melder_leave", function(melderNr) {
+    socket.on("esp_disconnect", function(melderNr) {
       document.getElementById(melderNr).style.backgroundColor = "orange";
       document.getElementById(melderNr).innerHTML=melderNr+" Offline seit: "+datum();
       ladeAlarme();
