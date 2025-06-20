@@ -29,8 +29,18 @@ def on_quittieren(melderNr):
                 event_loop
             )
 
+@sio.on("alarm_aus")
+def on_alarm_aus():
+    print("Alarm aus")
+    for ws, melderListe in esp_websockets.items():
+        asyncio.run_coroutine_threadsafe(
+            ws.send(f"alarm_aus"),
+            event_loop
+        )
+
 # Mit Flask verbinden
 sio.connect("http://localhost:5000")
+
 
 
 
@@ -55,7 +65,7 @@ async def handler(websocket):
                 melderNr = message.split(":")[1]
                 print(f"Alarm von Melder {melderNr}")
                 sio.emit("alarm", melderNr) #an Flask Server senden
-                
+
     #Wenn der ESP offline geht
     except websockets.exceptions.ConnectionClosed:
         for melder in esp_websockets[websocket]:

@@ -45,6 +45,10 @@ async def websocket_lesen(ws, sensoren):
                         sensor.alarm_active=False
                         dfplayer.stop()
                         sound_active = False
+            elif msg.startswith("alarm_aus"):
+                print("alarm aus")
+                dfplayer.stop()
+                
         except asyncio.TimeoutError:
             print("Websocket Timeout Error")
             await asyncio.sleep(0.1) 
