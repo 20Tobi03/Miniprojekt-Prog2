@@ -55,7 +55,7 @@ async def websocket_lesen(ws, sensoren):
             continue 
         except Exception as e:
             print(f"WebSocket-Lesefehler: {e}")
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.5)
 
 #Kontrollwert der Gas Sensoren
 async def analog_messen():
@@ -68,7 +68,7 @@ async def main():
     global dfplayer
     dfplayer = Player()
     dfplayer.volume(1)
-    global sound_active
+    global sound_active #verhindert ton neustart bei ernuetem Alarm
     sound_active = False
     
     await asyncio.sleep(1)
@@ -76,7 +76,7 @@ async def main():
     #wifi connection
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
-    wlan.connect('allgaeuDSL-EB', '240606072705')
+    wlan.connect('NB-TOBIAS', 'Prog2IstToll')
     while not wlan.isconnected():
         await asyncio.sleep(0.5)
     print("WLAN verbunden")

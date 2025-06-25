@@ -70,6 +70,9 @@
 
       if(melderPath==="verstecken"){
         container.style.display="none";
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
       }
       else{
         container.style.display = "flex";
