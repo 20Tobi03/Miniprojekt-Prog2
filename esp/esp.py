@@ -5,7 +5,9 @@ from dfplayer import Player
 from uwebsockets.client import connect
 
 gas_analog = ADC(0)
-WS_URL = "ws://192.168.178.163:8765"
+WS_URL = "ws://192.168.5.93:8765" #IP of Interpreter
+wifi_ssid="HANDY-TOBIAS"
+wifi_pass="Prog2IstToll"
 
 class Sensor:
     def __init__(self, digitalPinI, melderNrI, websocket):
@@ -76,7 +78,7 @@ async def main():
     #wifi connection
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
-    wlan.connect('NB-TOBIAS', 'Prog2IstToll')
+    wlan.connect(wifi_ssid, wifi_pass)
     while not wlan.isconnected():
         await asyncio.sleep(0.5)
     print("WLAN verbunden")

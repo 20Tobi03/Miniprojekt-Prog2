@@ -5,3 +5,7 @@ websocket-client
 asyncio
 os
 sqlite3
+
+
+On ESP:
+logging
