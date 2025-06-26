@@ -1,0 +1,7 @@
+Flask
+Flask-socketio
+websockets
+websocket-client
+asyncio
+os
+sqlite3
