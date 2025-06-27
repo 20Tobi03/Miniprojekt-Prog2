@@ -9,7 +9,7 @@
     alarm=false;
     socket.on("alarm", function(data) {
         document.getElementById(data.melderNr).style.backgroundColor = "red";
-        document.getElementById(data.melderNr).innerHTML=data.melderNr+" Alarm um: "+datum();
+        document.getElementById(data.melderNr).innerHTML=data.melderNr+" Alarm zuletzt: "+datum();
         alarm=true;
         ladeAlarme();
         console.log(data.melderPath);
@@ -19,22 +19,14 @@
         else{
           updateImage(data.melderPath);
         }
-    })
-
-    socket.on("noAlarm", function(melderNr) {
-      if(alarm) {
-        document.getElementById(melderNr).style.backgroundColor = "orange";
-        alarm=false;
-      }
-      document.getElementById(melderNr).innerHTML=melderNr+" Kein Alarm seit: "+datum();
-    })  
+    }) 
 
     socket.on("melder_join", function(melderNr) {
       document.getElementById(melderNr).style.backgroundColor = "green";
       document.getElementById(melderNr).innerHTML=melderNr+" Online seit: "+datum();
     })
 
-    socket.on("melder_leave", function(melderNr) {
+    socket.on("esp_disconnect", function(melderNr) {
       document.getElementById(melderNr).style.backgroundColor = "orange";
       document.getElementById(melderNr).innerHTML=melderNr+" Offline seit: "+datum();
       ladeAlarme();
@@ -47,7 +39,7 @@
         alarm=false;
     }
 
-    function test_quittieren() {
+    function zurueckstellen() {
       var melder = document.getElementsByClassName("melder");
       Array.from(melder).forEach(element => {
         socket.emit("quittieren", element.id);
@@ -77,17 +69,19 @@
       var container = document.getElementById("melderPlanContainer");
 
       if(melderPath==="verstecken"){
-        imageElement.style.display="none";
+        container.style.display="none";
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
       }
       else{
         container.style.display = "flex";
         var newImage = document.createElement("img");
         newImage.src = melderPath;
-        newImage.style.maxWidth = "30%"; // Optional: kann angepasst werden
+        newImage.style.maxWidth = "30%"; 
         newImage.style.height = "auto";
-        newImage.style.marginRight = "20px"; // Abstand zwischen den Bildern
+        newImage.style.marginRight = "20px"; 
         
-        // Füge das neue Bild zum Container hinzu
         container.appendChild(newImage);
       }
       
@@ -147,6 +141,8 @@
       font-size: 16px;
       margin: 10px;
       cursor: pointer;
+      width: 300px; /* feste Breite */
+      box-sizing: border-box; /* wichtig für konsistentes Padding */
     }
 
     .melder, .BMA_Steuerung {
@@ -180,7 +176,7 @@
     <div class="button-column">
       <button class="melder" id="1/1" onclick="quittieren(this.id)">Melder 1/1 Offline</button>
       <button class="melder" id="1/2" onclick="quittieren(this.id)">Melder 1/2 Offline</button>
-      <button class="BMA_Steuerung" onclick="test_quittieren()">Anlage zurückstellen</button>
+      <button class="BMA_Steuerung" onclick="zurueckstellen()">Anlage zurückstellen</button>
       <button class="BMA_Steuerung" onclick="alarm_aus()">Alarmton aus</button>
     </div>
   
