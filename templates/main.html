@@ -9,7 +9,7 @@
     alarm=false;
     socket.on("alarm", function(data) {
         document.getElementById(data.melderNr).style.backgroundColor = "red";
-        document.getElementById(data.melderNr).innerHTML=data.melderNr+" Alarm seit: "+datum();
+        document.getElementById(data.melderNr).innerHTML=data.melderNr+" Alarm zuletzt: "+datum();
         alarm=true;
         ladeAlarme();
         console.log(data.melderPath);
